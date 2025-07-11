@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Connexion Membre</h2>
+    {# The action URL should correctly handle the 'next' query parameter for redirection #}
+    <form method="POST" action="{{ url_for('login', next=request.args.get('next')) }}">
+        {#
+          CSRF Protection:
+          Flask-WTF is not used in this simplified version.
+          For production, integrating Flask-WTF for forms is highly recommended
+          as it provides CSRF protection automatically.
+          If using Flask-WTF, you'd include: {{ form.csrf_token }}
+        #}
+        <div class="form-group">
+            <label for="username">Nom d'utilisateur</label>
+            <input type="text" id="username" name="username" class="form-control"
+                   required value="{{ request.form.username if request.form.username else '' }}">
+        </div>
+        <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Se connecter</button>
+    </form>
+
+    {# Example of how to add a registration link if a registration route is ever created #}
+    {#
+    <p class="text-center mt-3">
+        Don't have an account? <a href="{{ url_for('register_route_name_placeholder') }}">Register here</a>
+    </p>
+    #}
+</div>
+{% endblock %}

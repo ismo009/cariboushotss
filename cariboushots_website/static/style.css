@@ -942,34 +942,25 @@ html {
     }
 }
 
-/* Modal Styling */
+/* Modal Styling - Nouvelle approche simplifiée */
 .photo-modal {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     z-index: 2000;
-    padding: 0;
-    box-sizing: border-box;
-    overflow: auto;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
 }
 
 .photo-modal.show {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    align-content: center !important;
-}
-
-.photo-modal.show .modal-content {
-    margin: auto !important;
-    align-self: center !important;
-    justify-self: center !important;
+    visibility: visible;
+    opacity: 1;
 }
 
 @keyframes modalFadeIn {
@@ -987,11 +978,15 @@ html {
 }
 
 .modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background: rgba(255, 255, 255, 0.97);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     border-radius: 20px;
-    width: 100%;
+    width: 90%;
     max-width: 900px;
     max-height: 90vh;
     overflow: hidden;
@@ -1001,23 +996,18 @@ html {
     border: 2px solid rgba(128, 128, 128, 0.3);
     display: flex;
     flex-direction: column;
-    position: relative;
-    margin: 20px;
-    animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    min-height: 300px;
-    transform: translateY(0) !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-@keyframes modalSlideIn {
-    from {
-        opacity: 0;
-        transform: scale(0.7) translateY(50px);
-    }
+/* Animation pour l'apparition du modal */
+.photo-modal:not(.show) .modal-content {
+    transform: translate(-50%, -50%) scale(0.7);
+    opacity: 0;
+}
 
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
+.photo-modal.show .modal-content {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
 }
 
 .modal-header {
@@ -1142,27 +1132,14 @@ html {
 
 /* Responsive Modal Improvements */
 @media (max-width: 768px) {
-    .photo-modal {
-        padding: 0;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .photo-modal.show {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        padding: 10px;
-    }
-
     .modal-content {
-        max-width: calc(100vw - 20px);
-        max-height: calc(100vh - 20px);
+        width: 95%;
+        max-height: 95vh;
         border-radius: 15px;
-        margin: 0;
-        align-self: center;
-        justify-self: center;
+        /* Le centrage absolu fonctionne même sur mobile */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 
     .modal-header {
@@ -1192,7 +1169,7 @@ html {
     .modal-body img {
         border-radius: 8px;
         cursor: default;
-        max-height: calc(100vh - 200px);
+        max-height: calc(95vh - 200px);
         max-width: 100%;
         width: auto;
         height: auto;
@@ -1214,26 +1191,14 @@ html {
 }
 
 @media (max-width: 480px) {
-    .photo-modal {
-        padding: 0;
-        overflow-y: auto;
-    }
-
-    .photo-modal.show {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        padding: 5px;
-    }
-
     .modal-content {
-        max-width: calc(100vw - 10px);
-        max-height: calc(100vh - 10px);
+        width: 98%;
+        max-height: 98vh;
         border-radius: 12px;
-        margin: 0;
-        align-self: center;
-        justify-self: center;
+        /* Centrage absolu garanti */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 
     .modal-header {
@@ -1260,7 +1225,7 @@ html {
     }
 
     .modal-body img {
-        max-height: calc(100vh - 160px);
+        max-height: calc(98vh - 160px);
         max-width: 100%;
         width: auto;
         height: auto;

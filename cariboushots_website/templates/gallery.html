@@ -111,7 +111,6 @@ function openPhotoModal(photoId, photoName, downloadLink, thumbnailLink) {
     modalImageLoaded = false;
     const modalImg = document.getElementById('modalPhotoImg');
     const modal = document.getElementById('photoModal');
-    const modalContent = modal.querySelector('.modal-content');
     
     // Set modal content
     document.getElementById('modalPhotoName').textContent = photoName;
@@ -120,25 +119,9 @@ function openPhotoModal(photoId, photoName, downloadLink, thumbnailLink) {
     modalImg.style.opacity = '0.5';
     modalImg.src = '';
     
-    // Force proper centering before showing modal
-    modal.style.display = 'flex';
-    modal.style.alignItems = 'center';
-    modal.style.justifyContent = 'center';
-    modal.style.position = 'fixed';
-    modal.style.top = '0';
-    modal.style.left = '0';
-    modal.style.width = '100vw';
-    modal.style.height = '100vh';
-    
-    // Show modal with class after positioning
-    setTimeout(() => {
-        modal.classList.add('show');
-        document.body.style.overflow = 'hidden';
-        
-        // Center modal content explicitly
-        modalContent.style.margin = 'auto';
-        modalContent.style.position = 'relative';
-    }, 10);
+    // Show modal avec la nouvelle méthode simple
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
     
     // Load image with better error handling
     const img = new Image();
@@ -146,11 +129,6 @@ function openPhotoModal(photoId, photoName, downloadLink, thumbnailLink) {
         modalImg.src = this.src;
         modalImg.style.opacity = '1';
         modalImageLoaded = true;
-        
-        // Re-center after image loads
-        setTimeout(() => {
-            centerModal();
-        }, 50);
     };
     
     img.onerror = function() {
@@ -159,11 +137,6 @@ function openPhotoModal(photoId, photoName, downloadLink, thumbnailLink) {
         modalImg.style.opacity = '1';
         modalImageLoaded = true;
         console.warn('Failed to load image:', thumbnailLink);
-        
-        // Re-center after fallback loads
-        setTimeout(() => {
-            centerModal();
-        }, 50);
     };
     
     // Try to load higher quality image first, fallback to thumbnail
@@ -177,20 +150,8 @@ function openPhotoModal(photoId, photoName, downloadLink, thumbnailLink) {
 }
 
 function centerModal() {
-    const modal = document.getElementById('photoModal');
-    const modalContent = modal.querySelector('.modal-content');
-    
-    if (modal.classList.contains('show')) {
-        // Force recalculation of positioning
-        modal.style.display = 'flex';
-        modal.style.alignItems = 'center';
-        modal.style.justifyContent = 'center';
-        
-        // Center content within the modal
-        modalContent.style.margin = 'auto';
-        modalContent.style.alignSelf = 'center';
-        modalContent.style.justifySelf = 'center';
-    }
+    // Plus besoin de cette fonction avec le positionnement absolu
+    // Le CSS se charge de tout
 }
 
 function closePhotoModal() {
@@ -201,9 +162,8 @@ function closePhotoModal() {
     modalImg.src = '';
     modalImg.style.opacity = '1';
     
-    // Hide modal properly
+    // Hide modal simplement
     modal.classList.remove('show');
-    modal.style.display = 'none';
     document.body.style.overflow = 'auto';
     
     // Reset data
@@ -255,7 +215,7 @@ function downloadPhoto() {
 // Enhanced keyboard controls
 document.addEventListener('keydown', function(event) {
     const modal = document.getElementById('photoModal');
-    if (modal.style.display === 'flex') {
+    if (modal.classList.contains('show')) {
         switch(event.key) {
             case 'Escape':
                 closePhotoModal();
@@ -275,26 +235,6 @@ document.addEventListener('keydown', function(event) {
                 }
                 break;
         }
-    }
-});
-
-// Auto-center modal on window resize
-window.addEventListener('resize', function() {
-    const modal = document.getElementById('photoModal');
-    if (modal && modal.classList.contains('show')) {
-        setTimeout(() => {
-            centerModal();
-        }, 100);
-    }
-});
-
-// Auto-center modal on orientation change (mobile)
-window.addEventListener('orientationchange', function() {
-    const modal = document.getElementById('photoModal');
-    if (modal && modal.classList.contains('show')) {
-        setTimeout(() => {
-            centerModal();
-        }, 200);
     }
 });
 

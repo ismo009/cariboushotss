@@ -42,7 +42,6 @@
             {% for folder in folders %}
                 <li>
                     <a href="{{ url_for('gallery', folder_id=folder.id) }}">{{ folder.name }}</a>
-                    <small class="text-muted"> (ID: {{ folder.id }})</small> {# Optional: for debugging #}
                 </li>
             {% endfor %}
         </ul>

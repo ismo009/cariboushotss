@@ -262,7 +262,7 @@ def inject_current_year():
 # Context processor to inject club_name (if needed globally, or pass per route)
 @app.context_processor
 def inject_club_name():
-    return {'club_name': "Cariboushots"}
+    return {'club_name': "Caribou'shots"}
 
 
 if __name__ == '__main__':

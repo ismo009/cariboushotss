@@ -57,13 +57,14 @@
         <div class="photo-grid">
             {% for photo in photos %}
                 <div class="photo-item">
-                    <a href="{{ photo.webViewLink if photo.webViewLink else '#' }}" target="_blank" title="Voir '{{ photo.name }}' sur Google Drive">
-                        {# Use a placeholder if thumbnailLink is missing, or if it's known to be problematic #}
-                        <img src="{{ photo.thumbnailLink if photo.thumbnailLink else url_for('static', filename='images/placeholder_image.png') }}"
-                             alt="{{ photo.name }}"
-                             onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/placeholder_image.png') }}';"> {# Fallback if thumbnail fails to load #}
+                    <div class="photo-preview" onclick="openPhotoModal('{{ photo.id }}', '{{ photo.name }}', '{{ photo.webContentLink if photo.webContentLink else '' }}', '{{ photo.thumbnailLink if photo.thumbnailLink else url_for('static', filename='images/placeholder_image.png') }}')">
+                        <div class="photo-image-container">
+                            <img src="{{ photo.thumbnailLink if photo.thumbnailLink else url_for('static', filename='images/placeholder_image.png') }}"
+                                 alt="{{ photo.name }}"
+                                 onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/placeholder_image.png') }}';">
+                        </div>
                         <p>{{ photo.name }}</p>
-                    </a>
+                    </div>
                 </div>
             {% endfor %}
         </div>
@@ -72,4 +73,268 @@
     {% endif %}
 
 </div>
+
+<!-- Modal de prévisualisation des photos -->
+<div id="photoModal" class="photo-modal" onclick="closePhotoModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h3 id="modalPhotoName">Nom de la photo</h3>
+            <button class="close-btn" onclick="closePhotoModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <img id="modalPhotoImg" src="" alt="Prévisualisation photo">
+        </div>
+        <div class="modal-footer">
+            <button id="modalViewBtn" class="modal-btn view-btn-modal" onclick="openInGoogleDrive()">
+                🔗 Voir sur Google Drive
+            </button>
+            <button id="modalDownloadBtn" class="modal-btn download-btn-modal" onclick="downloadPhoto()">
+                ⬇️ Télécharger la photo
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentPhotoData = {};
+let modalImageLoaded = false;
+
+function openPhotoModal(photoId, photoName, downloadLink, thumbnailLink) {
+    currentPhotoData = {
+        id: photoId,
+        name: photoName,
+        downloadLink: downloadLink,
+        thumbnailLink: thumbnailLink
+    };
+    
+    // Reset modal state
+    modalImageLoaded = false;
+    const modalImg = document.getElementById('modalPhotoImg');
+    const modal = document.getElementById('photoModal');
+    const modalContent = modal.querySelector('.modal-content');
+    
+    // Set modal content
+    document.getElementById('modalPhotoName').textContent = photoName;
+    
+    // Show loading state
+    modalImg.style.opacity = '0.5';
+    modalImg.src = '';
+    
+    // Force proper centering before showing modal
+    modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100vw';
+    modal.style.height = '100vh';
+    
+    // Show modal with class after positioning
+    setTimeout(() => {
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        
+        // Center modal content explicitly
+        modalContent.style.margin = 'auto';
+        modalContent.style.position = 'relative';
+    }, 10);
+    
+    // Load image with better error handling
+    const img = new Image();
+    img.onload = function() {
+        modalImg.src = this.src;
+        modalImg.style.opacity = '1';
+        modalImageLoaded = true;
+        
+        // Re-center after image loads
+        setTimeout(() => {
+            centerModal();
+        }, 50);
+    };
+    
+    img.onerror = function() {
+        // Fallback to placeholder if thumbnail fails
+        modalImg.src = "{{ url_for('static', filename='images/placeholder_image.png') }}";
+        modalImg.style.opacity = '1';
+        modalImageLoaded = true;
+        console.warn('Failed to load image:', thumbnailLink);
+        
+        // Re-center after fallback loads
+        setTimeout(() => {
+            centerModal();
+        }, 50);
+    };
+    
+    // Try to load higher quality image first, fallback to thumbnail
+    if (downloadLink && downloadLink.includes('export?')) {
+        // Convert download link to view link for better quality
+        const viewLink = downloadLink.replace('/export?', '/view?').replace('&export=download', '');
+        img.src = viewLink;
+    } else {
+        img.src = thumbnailLink;
+    }
+}
+
+function centerModal() {
+    const modal = document.getElementById('photoModal');
+    const modalContent = modal.querySelector('.modal-content');
+    
+    if (modal.classList.contains('show')) {
+        // Force recalculation of positioning
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        
+        // Center content within the modal
+        modalContent.style.margin = 'auto';
+        modalContent.style.alignSelf = 'center';
+        modalContent.style.justifySelf = 'center';
+    }
+}
+
+function closePhotoModal() {
+    const modal = document.getElementById('photoModal');
+    const modalImg = document.getElementById('modalPhotoImg');
+    
+    // Reset image
+    modalImg.src = '';
+    modalImg.style.opacity = '1';
+    
+    // Hide modal properly
+    modal.classList.remove('show');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+    
+    // Reset data
+    currentPhotoData = {};
+    modalImageLoaded = false;
+}
+
+function openInGoogleDrive() {
+    if (currentPhotoData.downloadLink) {
+        // Convert download link to proper Google Drive view link
+        let viewLink = currentPhotoData.downloadLink;
+        if (viewLink.includes('/export?')) {
+            viewLink = viewLink.replace('/export?', '/view?').replace('&export=download', '');
+        }
+        window.open(viewLink, '_blank');
+    } else {
+        alert('Lien Google Drive non disponible pour cette photo.');
+    }
+}
+
+function downloadPhoto() {
+    if (currentPhotoData.downloadLink) {
+        try {
+            // Create download link
+            const link = document.createElement('a');
+            link.href = currentPhotoData.downloadLink;
+            link.download = currentPhotoData.name;
+            link.target = '_blank';
+            link.style.display = 'none';
+            
+            // Add to DOM, click, and remove
+            document.body.appendChild(link);
+            link.click();
+            
+            // Clean up after a short delay
+            setTimeout(() => {
+                document.body.removeChild(link);
+            }, 100);
+            
+        } catch (error) {
+            console.error('Download failed:', error);
+            alert('Erreur lors du téléchargement. Essayez d\'ouvrir la photo dans Google Drive.');
+        }
+    } else {
+        alert('Lien de téléchargement non disponible pour cette photo.');
+    }
+}
+
+// Enhanced keyboard controls
+document.addEventListener('keydown', function(event) {
+    const modal = document.getElementById('photoModal');
+    if (modal.style.display === 'flex') {
+        switch(event.key) {
+            case 'Escape':
+                closePhotoModal();
+                break;
+            case 'Enter':
+                if (event.ctrlKey || event.metaKey) {
+                    downloadPhoto();
+                } else {
+                    openInGoogleDrive();
+                }
+                break;
+            case 'd':
+            case 'D':
+                if (event.ctrlKey || event.metaKey) {
+                    event.preventDefault();
+                    downloadPhoto();
+                }
+                break;
+        }
+    }
+});
+
+// Auto-center modal on window resize
+window.addEventListener('resize', function() {
+    const modal = document.getElementById('photoModal');
+    if (modal && modal.classList.contains('show')) {
+        setTimeout(() => {
+            centerModal();
+        }, 100);
+    }
+});
+
+// Auto-center modal on orientation change (mobile)
+window.addEventListener('orientationchange', function() {
+    const modal = document.getElementById('photoModal');
+    if (modal && modal.classList.contains('show')) {
+        setTimeout(() => {
+            centerModal();
+        }, 200);
+    }
+});
+
+// Prevent modal from closing when clicking on image
+document.addEventListener('DOMContentLoaded', function() {
+    const modalContent = document.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+    }
+});
+
+// Handle touch events for mobile
+let touchStartY = 0;
+let touchEndY = 0;
+
+document.addEventListener('touchstart', function(event) {
+    const modal = document.getElementById('photoModal');
+    if (modal.style.display === 'flex') {
+        touchStartY = event.changedTouches[0].screenY;
+    }
+});
+
+document.addEventListener('touchend', function(event) {
+    const modal = document.getElementById('photoModal');
+    if (modal.style.display === 'flex') {
+        touchEndY = event.changedTouches[0].screenY;
+        handleSwipe();
+    }
+});
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartY - touchEndY;
+    
+    // Swipe down to close modal
+    if (diff < -swipeThreshold) {
+        closePhotoModal();
+    }
+}
+</script>
 {% endblock %}

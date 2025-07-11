@@ -4,7 +4,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename # For securely handling filenames
 import os
 
-from flask import Flask, render_template, request, redirect, url_for, flash, Markup # Added Markup for HTML in flash
+from flask import Flask, render_template, request, redirect, url_for, flash
+from markupsafe import Markup # Import Markup from markupsafe
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -97,7 +98,7 @@ def load_user(user_id):
 # --- Routes ---
 @app.route('/')
 def index():
-    return render_template("index.html", club_name="Cariboushots")
+    return render_template("index.html", club_name="Caribou'Shots")
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -265,6 +266,5 @@ def inject_club_name():
 
 
 if __name__ == '__main__':
-    if not os.path.exists(app.config['UPLOAD_FOLDER']):
-        os.makedirs(app.config['UPLOAD_FOLDER'])
-    app.run(debug=True, host='0.0.0.0', port=5001) # Running on a different port for clarity if needed
+    # The LOCAL_TEMP_UPLOAD_FOLDER creation is handled near the top of the script.
+    app.run(debug=True, host='0.0.0.0', port=5001)

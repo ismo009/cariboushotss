@@ -2,18 +2,18 @@
 
 {% block title %}
     {% if current_folder_name %}
-        {{ current_folder_name }} - Gallery
+        {{ current_folder_name }} - Galerie
     {% else %}
-        Photo Gallery
+        Galerie Photo
     {% endif %}
 {% endblock %}
 
 {% block content %}
 <div class="gallery-container">
-    <h2>Club Photo Gallery</h2>
+    <h2>Galerie Photo du Club</h2>
 
     <h3>
-        Currently viewing:
+        Actuellement dans :
         <a href="{{ url_for('gallery', folder_id=current_folder_id if current_folder_id != MAIN_CLUB_FOLDER_ID else None) }}">
             {{ current_folder_name }}
         </a>
@@ -21,20 +21,23 @@
 
     {# Back navigation link #}
     {% if current_folder_id != MAIN_CLUB_FOLDER_ID %} {# Only show 'Back' if not in the root of the gallery #}
-        <p>
-            <a href="{{ url_for('gallery', folder_id=parent_folder_id if parent_folder_id else None) }}">
-                &laquo; Back to
-                {% if parent_folder_id %}
-                    previous folder
-                {% else %}
-                    Main Gallery
-                {% endif %}
+        <div class="back-navigation">
+            <a href="{{ url_for('gallery', folder_id=parent_folder_id if parent_folder_id else None) }}" class="back-link">
+                <span class="back-arrow">←</span>
+                <span class="back-text">
+                    Retour vers
+                    {% if parent_folder_id %}
+                        le dossier précédent
+                    {% else %}
+                        la Galerie Principale
+                    {% endif %}
+                </span>
             </a>
-        </p>
+        </div>
     {% endif %}
 
     {% if folders %}
-        <h4>Sub-folders:</h4>
+        <h4>Sous-dossiers :</h4>
         <ul class="folder-list">
             {% for folder in folders %}
                 <li>
@@ -44,17 +47,17 @@
             {% endfor %}
         </ul>
     {% else %}
-        <p>No sub-folders found in {{ current_folder_name }}.</p>
+        <p>Aucun sous-dossier trouvé dans {{ current_folder_name }}.</p>
     {% endif %}
 
     <hr>
 
     {% if photos %}
-        <h4>Photos in {{ current_folder_name }}:</h4>
+        <h4>Photos dans {{ current_folder_name }} :</h4>
         <div class="photo-grid">
             {% for photo in photos %}
                 <div class="photo-item">
-                    <a href="{{ photo.webViewLink if photo.webViewLink else '#' }}" target="_blank" title="View '{{ photo.name }}' on Google Drive">
+                    <a href="{{ photo.webViewLink if photo.webViewLink else '#' }}" target="_blank" title="Voir '{{ photo.name }}' sur Google Drive">
                         {# Use a placeholder if thumbnailLink is missing, or if it's known to be problematic #}
                         <img src="{{ photo.thumbnailLink if photo.thumbnailLink else url_for('static', filename='images/placeholder_image.png') }}"
                              alt="{{ photo.name }}"
@@ -65,7 +68,7 @@
             {% endfor %}
         </div>
     {% else %}
-        <p>No photos found in {{ current_folder_name }}.</p>
+        <p>Aucune photo trouvée dans {{ current_folder_name }}.</p>
     {% endif %}
 
 </div>

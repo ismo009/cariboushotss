@@ -10,14 +10,31 @@
 
 {% block content %}
 <div class="gallery-container">
-    <h2>Galerie Photo du Club</h2>
-
-    <h3>
-        Actuellement dans :
-        <a href="{{ url_for('gallery', folder_id=current_folder_id if current_folder_id != MAIN_CLUB_FOLDER_ID else None) }}">
-            {{ current_folder_name }}
-        </a>
-    </h3>
+    <div class="gallery-header">
+        <div class="gallery-header-content">
+            <div class="gallery-title-section">
+                <h2>Galerie Photo du Club</h2>
+                
+                <h3>
+                    Actuellement dans :
+                    <a href="{{ url_for('gallery', folder_id=current_folder_id if current_folder_id != MAIN_CLUB_FOLDER_ID else None) }}">
+                        {{ current_folder_name }}
+                    </a>
+                </h3>
+            </div>
+            {% if photos and photos|length > 0 %}
+                <div class="gallery-cover-photo">
+                    <img src="{{ photos[0].thumbnailLink if photos[0].thumbnailLink else url_for('static', filename='images/placeholder_image.png') }}"
+                         alt="Photo de couverture - {{ photos[0].name }}"
+                         class="cover-image"
+                         onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/placeholder_image.png') }}';">
+                    <div class="cover-overlay">
+                        <span class="photo-count">{{ photos|length }} photo{{ 's' if photos|length > 1 else '' }}</span>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 
     {# Back navigation link #}
     {% if current_folder_id != MAIN_CLUB_FOLDER_ID %} {# Only show 'Back' if not in the root of the gallery #}
@@ -38,13 +55,34 @@
 
     {% if folders %}
         <h4>Sous-dossiers :</h4>
-        <ul class="folder-list">
+        <div class="folder-grid">
             {% for folder in folders %}
-                <li>
-                    <a href="{{ url_for('gallery', folder_id=folder.id) }}">{{ folder.name }}</a>
-                </li>
+                <div class="folder-card">
+                    <a href="{{ url_for('gallery', folder_id=folder.id) }}" class="folder-link">
+                        <div class="folder-preview">
+                            {% if folder.first_photo and folder.first_photo.thumbnailLink %}
+                                <img src="{{ folder.first_photo.thumbnailLink }}" 
+                                     alt="Aperçu du dossier {{ folder.name }}" 
+                                     class="folder-cover-image"
+                                     onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'folder-placeholder\'><span>📁</span></div>';">
+                            {% else %}
+                                <div class="folder-placeholder">
+                                    <span>📁</span>
+                                </div>
+                            {% endif %}
+                            <div class="folder-overlay">
+                                {% if folder.photo_count is defined %}
+                                    <span class="folder-photo-count">{{ folder.photo_count }} photo{{ 's' if folder.photo_count != 1 else '' }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="folder-info">
+                            <h5 class="folder-name">{{ folder.name }}</h5>
+                        </div>
+                    </a>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
         <p>Aucun sous-dossier trouvé dans {{ current_folder_name }}.</p>
     {% endif %}

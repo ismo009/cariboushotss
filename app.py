@@ -17,6 +17,54 @@ from gdrive_service import get_drive_service, upload_photo_to_drive, find_or_cre
                            list_folders, list_photos_in_folder, get_folder_details
                            # MAIN_CLUB_FOLDER_ID removed from here, will be in app.config
 
+def enrich_folders_with_photo_data(drive_service, folders):
+    """
+    Enriches folder data with first photo and photo count information.
+    
+    Args:
+        drive_service: Authenticated Google Drive service object
+        folders: List of folder objects from Google Drive API
+        
+    Returns:
+        List of enriched folder objects with first_photo and photo_count
+    """
+    enriched_folders = []
+    
+    for folder in folders:
+        enriched_folder = folder.copy()  # Copy original folder data
+        
+        try:
+            # Get photos in this folder
+            photos_in_folder = list_photos_in_folder(drive_service, folder['id'])
+            
+            # Add photo count
+            enriched_folder['photo_count'] = len(photos_in_folder)
+            
+            # Add first photo if available
+            if photos_in_folder:
+                first_photo = photos_in_folder[0]  # First photo in the list
+                enriched_folder['first_photo'] = {
+                    'id': first_photo.get('id'),
+                    'name': first_photo.get('name'),
+                    'thumbnailLink': first_photo.get('thumbnailLink'),
+                    'webViewLink': first_photo.get('webViewLink'),
+                    'webContentLink': first_photo.get('webContentLink')
+                }
+            else:
+                enriched_folder['first_photo'] = None
+                
+            app.logger.debug(f"Folder '{folder['name']}': {len(photos_in_folder)} photos, first_photo: {'Yes' if photos_in_folder else 'No'}")
+            
+        except Exception as e:
+            app.logger.warning(f"Error enriching folder '{folder['name']}': {e}")
+            # Set default values in case of error
+            enriched_folder['photo_count'] = 0
+            enriched_folder['first_photo'] = None
+            
+        enriched_folders.append(enriched_folder)
+    
+    return enriched_folders
+
 app = Flask(__name__)
 
 # --- Configuration ---
@@ -216,6 +264,10 @@ def gallery(folder_id=None):
     folders_in_current_view = list_folders(drive_service, current_folder_id_to_list)
     photos_in_current_view = list_photos_in_folder(drive_service, current_folder_id_to_list)
 
+    # Enrich folders with photo data (first photo and count)
+    enriched_folders = enrich_folders_with_photo_data(drive_service, folders_in_current_view)
+    app.logger.info(f"Enriched {len(enriched_folders)} folders with photo data")
+
     current_folder_details = get_folder_details(drive_service, current_folder_id_to_list, main_club_folder_id)
     current_folder_name = "Main Gallery"
     parent_folder_id_for_nav = None # Renamed to avoid conflict with folder_id param
@@ -245,7 +297,7 @@ def gallery(folder_id=None):
              photo['webViewLink'] = '#'
 
     return render_template("gallery.html",
-                           folders=folders_in_current_view,
+                           folders=enriched_folders,
                            photos=photos_in_current_view,
                            current_folder_name=current_folder_name,
                            current_folder_id=current_folder_id_to_list,

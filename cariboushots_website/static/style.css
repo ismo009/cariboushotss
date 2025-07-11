@@ -1,0 +1,304 @@
+/* General Body Styles */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa; /* Lighter gray background */
+    color: #343a40; /* Darker text color */
+    line-height: 1.6;
+}
+
+/* Navigation Bar */
+nav {
+    background-color: #343a40; /* Dark navbar background */
+    color: #ffffff;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between; /* Ensures items are spaced out */
+    align-items: center; /* Vertically aligns items in the nav bar */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-auth-links {
+    display: flex;
+    align-items: center;
+}
+
+.nav-text {
+    color: #adb5bd; /* Lighter text for greeting */
+    margin-right: 15px;
+    font-size: 0.9em;
+}
+
+nav a {
+    color: #ffffff;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: 500; /* Medium font weight */
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #17a2b8; /* Accent color for hover */
+    text-decoration: none;
+}
+
+nav a.active {
+    color: #17a2b8; /* Accent color for active */
+    font-weight: bold; /* Make it bold */
+    /* Consider a bottom border or different background for more emphasis */
+    /* border-bottom: 2px solid #17a2b8; */
+}
+
+
+/* Main Content Area */
+main.container {
+    max-width: 1140px; /* Standard container width */
+    margin: 30px auto;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    background-color: #343a40; /* Match navbar */
+    color: #ffffff;
+    margin-top: 40px; /* Add some space above footer */
+    /* position: fixed; bottom: 0; width: 100%; Removed fixed position for better flow */
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+    color: #0056b3; /* Primary color for headings */
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+
+
+/* Hero Section on Index Page */
+.hero-section {
+    background-color: #007bff; /* Primary blue */
+    color: white;
+    padding: 50px 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+.hero-section h1 {
+    color: white;
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+.hero-section p {
+    font-size: 1.25rem;
+}
+
+/* Presentation Section */
+.presentation {
+    padding: 20px;
+    background-color: #e9ecef; /* Light background for section */
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+/* Forms (Login, Upload) */
+.form-container {
+    background-color: #fdfdff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.form-group {
+    margin-bottom: 1.5rem;
+}
+.form-group label {
+    display: block;
+    margin-bottom: .5rem;
+    font-weight: 600;
+}
+.form-control {
+    width: 100%;
+    padding: .75rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba(0,123,255,.25);
+}
+.form-control-file {
+    display: block; /* Make it take full width */
+}
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: #007bff; /* Primary button color */
+    border: 1px solid #007bff;
+    padding: .75rem 1.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: .25rem;
+    text-decoration: none; /* For button-like links */
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+.text-muted {
+    color: #6c757d !important;
+}
+
+/* Flashed Messages / Alerts */
+.flashes {
+    list-style: none; /* Remove default list styling */
+    padding: 0; /* Remove default padding */
+    margin-bottom: 1.5rem; /* Space below the flashes container */
+}
+
+.alert {
+    padding: .9rem 1.25rem; /* Padding inside each alert */
+    margin-bottom: 1rem; /* Space between multiple alerts */
+    border: 1px solid transparent; /* Base border */
+    border-radius: .3rem; /* Rounded corners for alerts */
+    font-size: 0.95rem; /* Slightly smaller font for alerts */
+    position: relative; /* For potential close buttons later */
+}
+
+.alert-success {
+    color: #0f5132;
+    background-color: #d1e7dd;
+    border-color: #badbcc;
+}
+
+.alert-danger {
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+}
+
+.alert-info {
+    color: #055160;
+    background-color: #cff4fc;
+    border-color: #b6effb;
+}
+
+.alert-warning {
+    color: #664d03;
+    background-color: #fff3cd;
+    border-color: #ffecb5;
+}
+
+
+/* Gallery Styling */
+.gallery-container {
+    padding: 20px;
+}
+
+/* Styled Folder List */
+.folder-list {
+    list-style: none;
+    padding-left: 0;
+    display: flex; /* Arrange folders in a row, wrapping if necessary */
+    flex-wrap: wrap;
+    gap: 12px; /* Spacing between folder items */
+    margin-bottom: 25px; /* Space below the folder list */
+}
+
+.folder-list li a {
+    display: flex; /* Use flex to align icon and text */
+    align-items: center; /* Vertically center icon and text */
+    padding: 10px 18px;
+    background-color: #f0f2f5; /* Slightly different light background */
+    color: #0d6efd; /* Bootstrap primary blue */
+    border-radius: 20px; /* Pill shape */
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #d8dde2;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.folder-list li a:hover {
+    background-color: #0d6efd;
+    color: #ffffff;
+    text-decoration: none;
+    border-color: #0a58ca;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Basic folder icon (Unicode) */
+.folder-list li a::before {
+    content: "\\1F4C1"; /* Unicode for folder icon */
+    margin-right: 10px; /* Space between icon and text */
+    font-size: 1.1em; /* Slightly larger icon */
+}
+
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Increased gap */
+    margin-top: 20px;
+}
+.photo-item {
+    border: 1px solid #e0e0e0; /* Lighter border */
+    border-radius: 6px; /* Slightly more rounded */
+    padding: 12px;
+    text-align: center;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+    transition: transform 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
+    overflow: hidden; /* Important for child elements like images if they scale */
+}
+.photo-item:hover {
+    transform: translateY(-6px) scale(1.03); /* Enhanced hover effect */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.12); /* More pronounced shadow on hover */
+}
+.photo-item img {
+    max-width: 100%;
+    height: 160px; /* Fixed height for images */
+    object-fit: cover; /* Crop image to fit, maintaining aspect ratio */
+    border-radius: 4px; /* Rounded corners for the image itself */
+    margin-bottom: 10px; /* Space between image and text */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.photo-item p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #555;
+    word-wrap: break-word; /* Prevent long names from breaking layout */
+}
+.photo-item a {
+    text-decoration: none;
+    color: inherit; /* Inherit text color from parent */
+}
+
+hr {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,.1);
+}

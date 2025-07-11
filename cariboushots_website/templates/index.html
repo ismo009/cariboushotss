@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Home - {{ club_name }}{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>Welcome to {{ club_name }}!</h1>
+    <p>Your place for amazing photography.</p>
+</div>
+
+<!-- This is the "quick presentation section" -->
+<section class="presentation">
+    <h2>About Us</h2>
+    <p>Cariboushots is a passionate community of photographers dedicated to capturing the beauty of the world around us. From stunning landscapes to intimate portraits, we explore all facets of photography. Join us to share your work, learn new skills, and connect with fellow photo enthusiasts!</p>
+    <p>This website allows our members to easily share their latest shots directly to our club's Google Drive and browse the collective gallery.</p>
+</section>
+
+<!-- Placeholder for featured photos, if desired later -->
+<!--
+<section class="featured-photos">
+    <h2>Featured Shots</h2>
+    <div class="photo-grid">
+        <p>(Featured photos will appear here)</p>
+    </div>
+</section>
+-->
+{% endblock %}

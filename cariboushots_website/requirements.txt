@@ -1,6 +1,5 @@
 # Core Flask framework
 Flask==3.0.0
-flask-login==0.6.3
 
 # Security and utilities
 Werkzeug==3.0.1
@@ -24,9 +23,6 @@ python-dateutil==2.8.2
 six==1.16.0
 urllib3==2.1.0
 requests==2.31.0
-
-# For file handling and uploads
-Pillow==10.1.0
 
 # Environment variables management
 python-dotenv==1.0.0

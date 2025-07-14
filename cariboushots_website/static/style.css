@@ -314,7 +314,7 @@ h4 {
 
 /* Hero Section on Index Page */
 .hero-section {
-    background: linear-gradient(135deg, #ffffff 0%, #cecece 30%, #dc2626 70%, #ee9797 100%);
+    background: linear-gradient(135deg, #dfd6d6 0%, #cecece 30%, #dc2626 70%, #ee9797 100%);
     color: white;
     padding: 60px 20px;
     text-align: center;
@@ -1183,23 +1183,27 @@ html {
     }
 }
 
-/* Modal Styling - Nouvelle approche simplifiée */
+/* Modal Styling - Fixed positioning for proper viewport centering */
 .photo-modal {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    z-index: 2000;
+    z-index: 9999;
     visibility: hidden;
     opacity: 0;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0;
+    padding: 0;
 }
 
 .photo-modal.show {
@@ -1238,7 +1242,8 @@ html {
     display: flex;
     flex-direction: column;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    margin: auto;
+    margin: 0;
+    transform-origin: center center;
 }
 
 /* Animation pour l'apparition du modal */
